@@ -1,0 +1,60 @@
+# === Java / Maven / Spring Boot ===
+/backend/target/
+*.class
+*.jar
+*.war
+*.ear
+
+# Maven backup files
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+
+# Maven wrapper
+.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.properties
+.mvn/timing.properties
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+/backend/out/
+
+# Eclipse
+.project
+.classpath
+
+# === Node / Frontend ===
+/frontend/node_modules/
+/frontend/build/
+/frontend/dist/
+
+# === Logs ===
+*.log
+
+# === Secrets & Credentials ===
+.env
+*.key
+*.pem
+*.crt
+*.json
+*.p12
+*.jks
+
+# Allow package.json files (important!)
+!package.json
+!frontend/package.json
+!frontend/package-lock.json
+!backend/package.json
+
+# === OS / Editor Junk ===
+.DS_Store
+Thumbs.db
+.vscode/
+
