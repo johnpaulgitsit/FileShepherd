@@ -5,6 +5,8 @@
 *.war
 *.ear
 
+target/
+
 # Maven backup files
 pom.xml.tag
 pom.xml.releaseBackup
