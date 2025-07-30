@@ -15,7 +15,8 @@ SecureFVLite is a web app for securely sending files from a customer/user to you
 - File upload/download with GCP
 
 ## 📸 Screenshots
-<img width="765" alt="Screenshot 2025-07-01 at 4 23 37 PM" src="https://github.com/user-attachments/assets/e7011511-0f26-47d7-ae65-2ed5bfd2578b" />
+<img width="496" height="716" alt="Screenshot 2025-07-29 at 7 43 18 PM" src="https://github.com/user-attachments/assets/f91ad812-7c72-4540-9b53-b499f20c77a0" />
+
 
 
 ##  How to Run
