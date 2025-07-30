@@ -1,13 +1,11 @@
-### Java ###
+# === Java / Maven / Spring Boot ===
+/backend/target/
 *.class
 *.jar
 *.war
 *.ear
 
-### Maven ###
-target/
-!.mvn/wrapper/maven-wrapper.jar
-.mvn/wrapper/maven-wrapper.properties
+# Maven backup files
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
@@ -16,29 +14,31 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 
-### IntelliJ IDEA ###
+# Maven wrapper
+.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.properties
+.mvn/timing.properties
+
+# IntelliJ IDEA
 .idea/
-*.iws
 *.iml
+*.iws
 *.ipr
-out/
+/backend/out/
 
-### VS Code ###
-.vscode/
+# Eclipse
+.project
+.classpath
 
-### Build directories ###
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+# === Node / Frontend ===
+/frontend/node_modules/
+/frontend/build/
+/frontend/dist/
 
-### Logs ###
+# === Logs ===
 *.log
 
-### OS Files ###
-.DS_Store
-Thumbs.db
-
-### Environment & Secrets ###
+# === Secrets & Credentials ===
 .env
 *.key
 *.pem
@@ -47,4 +47,14 @@ Thumbs.db
 *.p12
 *.jks
 
+# Allow package.json files (important!)
+!package.json
+!frontend/package.json
+!frontend/package-lock.json
+!backend/package.json
+
+# === OS / Editor Junk ===
+.DS_Store
+Thumbs.db
+.vscode/
 
