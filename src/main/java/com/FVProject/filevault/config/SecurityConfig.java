@@ -1,7 +1,7 @@
-
 package com.FVProject.filevault.config;
-  // with some xtra security configurations such as hashing
-// SecurityConfig.java
+// WARNING: This configuration is for demo/testing purposes ONLY.
+// It disables real authentication and authorization for public access.
+// DO NOT use this in production or with real user data.
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
@@ -29,14 +29,11 @@ public class SecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
+                // DEMO: Permit all requests - no auth required
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/*.html", "/css/**", "/js/**", "/api/auth/**").permitAll()
-                        .requestMatchers("/files/**").authenticated()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
-
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 )
@@ -44,16 +41,11 @@ public class SecurityConfig {
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                             response.setContentType("application/json");
-                            response.getWriter().write("{\"error\": \"Authentication required\"}");
+                            response.getWriter().write("{\"error\": \"Authentication required (demo - this shouldn't occur)\"}");
                         })
                 )
-                .logout(logout -> logout
-                        .logoutUrl("/api/auth/logout")
-                        .logoutSuccessHandler((request, response, authentication) -> response.setStatus(HttpServletResponse.SC_OK))
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
-                )
-                .httpBasic(httpBasic -> httpBasic.disable());
+                .httpBasic(httpBasic -> httpBasic.disable())
+        ;
 
         return http.build();
     }
@@ -62,21 +54,21 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of("http://localhost:3000"));
-
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
-
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }
+
 
 
 

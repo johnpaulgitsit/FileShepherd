@@ -3,7 +3,7 @@ package com.FVProject.filevault.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "file_metadata")
+@Table(name = "-")
 public class FileMetadata {
 
     @Id

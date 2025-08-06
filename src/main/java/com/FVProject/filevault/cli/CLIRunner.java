@@ -1,11 +1,9 @@
 package com.FVProject.filevault.cli;
 
-
 import com.FVProject.filevault.DTO.UserLoginRequest;
 import com.FVProject.filevault.DTO.UserRegisterRequest;
 import com.FVProject.filevault.model.User;
 import com.FVProject.filevault.services.UserService;
-
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -20,11 +18,59 @@ public class CLIRunner {
         this.userService = userService;
     }
 
+    public String registerUser(String username, String password, String email) {
+        UserRegisterRequest regRequest = new UserRegisterRequest();
+        regRequest.setUsername(username);
+        regRequest.setPassword(password);
+        regRequest.setEmail(email);
+
+        Long userId = userService.createUser(regRequest);
+        return (userId == null) ? "Username or email already exists." : "Registration successful!";
+    }
+
+    public String loginUser(String username, String password) {
+        UserLoginRequest loginRequest = new UserLoginRequest();
+        loginRequest.setUsername(username);
+        loginRequest.setPassword(password);
+
+        return userService.authenticate(loginRequest) ? "Login successful!" : "Invalid username or password.";
+    }
+
+    public List<String> listAllUsers() {
+        return userService.getAllUsers("admin").stream()
+                .map(u -> u.getUsername() + " (" + u.getRole() + ")")
+                .toList();
+    }
+
+    public void handleAdminFlow(Scanner scanner) {
+        System.out.println("Welcome Admin! Type 'view-all', 'sayhi', or 'exit':");
+        while (true) {
+            String command = scanner.nextLine().trim().toLowerCase();
+            switch (command) {
+                case "view-all" -> listAllUsers().forEach(System.out::println);
+                case "sayhi" -> System.out.println("Hello Admin!");
+                case "exit" -> { System.out.println("Goodbye."); return; }
+                default -> System.out.println("Unknown command.");
+            }
+        }
+    }
+
+    public void handleUserFlow(Scanner scanner) {
+        System.out.println("Welcome User! Type 'sayhi' or 'exit':");
+        while (true) {
+            String command = scanner.nextLine().trim().toLowerCase();
+            switch (command) {
+                case "sayhi" -> System.out.println("Hello there!");
+                case "exit" -> { System.out.println("Goodbye."); return; }
+                default -> System.out.println("Unknown command.");
+            }
+        }
+    }
 
     public void run() {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Type 'register' to create an account or 'login' to sign in:");
+        System.out.println("Type 'register' or 'login':");
         String action = scanner.nextLine().trim().toLowerCase();
 
         System.out.print("Username: ");
@@ -33,92 +79,30 @@ public class CLIRunner {
         System.out.print("Password: ");
         String password = scanner.nextLine();
 
-        System.out.print("Email: ");
-        String email = scanner.nextLine();
+        String result;
+        if ("register".equals(action)) {
+            System.out.print("Email: ");
+            String email = scanner.nextLine();
+            result = registerUser(username, password, email);
+            System.out.println(result);
+        } else if ("login".equals(action)) {
+            result = loginUser(username, password);
+            System.out.println(result);
 
-        switch (action) {
-            case "register":
-                UserRegisterRequest regRequest = new UserRegisterRequest();
-                regRequest.setUsername(username);
-                regRequest.setPassword(password);
-                regRequest.setEmail(email);
-
-                Long userId = userService.createUser(regRequest);
-
-                if (userId == null) {
-                    System.out.println("message: Username or email already exists");
-                    break;
-                }
-
-                // Assign IAM role for Google Cloud Storage
-                boolean roleAssigned = userService.assignUserStorageRole(regRequest.getEmail(), userId);
-
-                if (!roleAssigned) {
-                    System.out.println("⚠️ User registered, but failed to assign IAM role.");
-                } else {
-                    System.out.println("✅ IAM role assigned successfully!");
-                }
-
-                System.out.println("🙂 Registration successful!");
-                break;
-
-
-            case "login":
-                UserLoginRequest loginRequest = new UserLoginRequest();
-                loginRequest.setUsername(username);
-                loginRequest.setPassword(password);
-
-                try {
-                    boolean loggedIn = userService.authenticate(loginRequest);
-                    if (loggedIn) {
-                        System.out.println(" Login successful!");
-
-                        User loggedInUser = userService.getUserByUsername(username);
-                        if (loggedInUser != null && "ADMIN".equalsIgnoreCase(loggedInUser.getRole())) {
-                            System.out.println("🔐 Welcome Admin!");
-                            System.out.println("Options: [view-all] [sayhi]");
-                            String option = scanner.nextLine().trim().toLowerCase();
-
-                            if ("view-all".equals(option)) {
-                                try {
-                                    List<User> allUsers = userService.getAllUsers(username);
-                                    System.out.println(" All Users:");
-                                    for (User user : allUsers) {
-                                        System.out.println("- " + user.getUsername() + " (" + user.getRole() + ")");
-                                    }
-                                } catch (Exception e) {
-                                    System.out.println(" Could not fetch users: " + e.getMessage());
-                                }
-                            } else if ("sayhi".equals(option)) {
-                                System.out.println(" Hello Admin, how’s it going?");
-                            } else {
-                                System.out.println("?  Unknown command.");
-                            }
-
-                        } else {
-                            System.out.println(" Welcome User!");
-                            System.out.println("Options: [sayhi]");
-                            String option = scanner.nextLine().trim().toLowerCase();
-
-                            if ("sayhi".equals(option)) {
-                                System.out.println(" Hello there! Hope you're doing well.");
-                            } else {
-                                System.out.println(" ? Unknown command.");
-                            }
-                        }
+            if ("Login successful!".equals(result)) {
+                User user = userService.getUserByUsername(username);
+                if (user != null) {
+                    if ("ADMIN".equalsIgnoreCase(user.getRole())) {
+                        handleAdminFlow(scanner);
                     } else {
-                        System.out.println(" Login failed: Invalid credentials.");
+                        handleUserFlow(scanner);
                     }
-                } catch (Exception e) {
-                    System.out.println(" Login failed: " + e.getMessage());
                 }
-                break;
-
-            default:
-                System.out.println(" ? Unknown action.");
+            }
+        } else {
+            System.out.println("Unknown action.");
         }
-
-        scanner.close();
     }
-
 }
+
+

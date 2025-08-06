@@ -1,78 +1,49 @@
 package com.FVProject.filevault.services;
 
-import com.FVProject.filevault.model.User;
-import com.FVProject.filevault.repositories.FileMetadataRepository;
-import com.FVProject.filevault.repositories.UserRepository;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-import javax.sql.DataSource;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.CallableStatement;
-import java.sql.SQLException;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+// F I L E _ S E R V I C E ----> DEMO!!!! ONLY FOR TESTING!!!
 
 @Service
 public class FileService {
-    private final FileMetadataRepository fileMetadataRepository;
-    private final DataSource dataSource; // Injecting DataSource for MySQL operations
-    private final UserRepository userRepository;
 
-        public Long getUserIdByUsername(String username) {
-            User user = userRepository.findByUsername(username);
-            if (user == null) throw new UsernameNotFoundException("User not found");
-            return user.getId();
+    private final Path uploadRoot = Paths.get("demo-uploads");
+
+    public FileService() throws IOException {
+        Files.createDirectories(uploadRoot);
+    }
+
+    public void saveDemoFile(String username, String filename, byte[] fileData) throws IOException {
+        Path userDir = uploadRoot.resolve(username);
+        Files.createDirectories(userDir);
+        Path filePath = userDir.resolve(filename);
+        Files.write(filePath, fileData);
+    }
+
+    public byte[] loadDemoFile(String username, String filename) throws IOException {
+        Path filePath = uploadRoot.resolve(username).resolve(filename);
+        return Files.readAllBytes(filePath);
+    }
+
+    public List<String> listDemoFiles(String username) throws IOException {
+        Path userDir = uploadRoot.resolve(username);
+        if (!Files.exists(userDir)) return List.of();
+
+        try (Stream<Path> paths = Files.list(userDir)) {
+            return paths
+                    .filter(Files::isRegularFile)
+                    .map(Path::getFileName)
+                    .map(Path::toString)
+                    .collect(Collectors.toList());
         }
-
-    public FileService(
-            FileMetadataRepository fileMetadataRepository,
-            DataSource dataSource,
-            UserRepository userRepository
-    ) {
-        this.fileMetadataRepository = fileMetadataRepository;
-        this.dataSource = dataSource;
-        this.userRepository = userRepository;
-    }
-
-    // Securely retrieve stored encryption key
-    public SecretKey getStoredKey(Long userId) throws Exception {
-        return KeyGenerator.getInstance("AES").generateKey();
-    }
-
-    // Encrypt file before saving
-    public byte[] encryptFile(byte[] fileData, SecretKey key) throws Exception {
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.ENCRYPT_MODE, key);
-        return cipher.doFinal(fileData);
-    }
-
-    // Decrypt file before sending
-    public byte[] decryptFile(byte[] encryptedData, SecretKey key) throws Exception {
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.DECRYPT_MODE, key);
-        return cipher.doFinal(encryptedData);
-    }
-
-    // Store file metadata in MySQL using a stored procedure
-    public void saveFileMetadata(Long userId, String filename, String filePath) throws SQLException {
-        try (Connection connection = dataSource.getConnection();
-             CallableStatement statement = connection.prepareCall("{CALL SaveFileMetadata(?, ?, ?)}")) {
-            statement.setLong(1, userId);
-            statement.setString(2, filename);
-            statement.setString(3, filePath);
-            statement.execute();
-        }
-    }
-
-    // Save the encrypted file to the user's folder
-    public void saveEncryptedFile(Long userId, String filename, byte[] encryptedData) throws Exception {
-        String uploadDir = "uploads/" + userId + "/";
-        Files.createDirectories(Paths.get(uploadDir));
-        Path filePath = Paths.get(uploadDir + filename);
-        Files.write(filePath, encryptedData);
     }
 }
+
+
