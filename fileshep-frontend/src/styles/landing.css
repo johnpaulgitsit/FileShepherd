@@ -1,0 +1,99 @@
+
+.landing-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background: radial-gradient(at 30% 30%, rgba(100, 180, 255, 0.08), transparent),
+              linear-gradient(to bottom right, #6ba9ff, #92c3ff);
+  animation: fadeIn 1s ease;
+  position: relative;
+}
+
+.glow {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  filter: blur(100px);
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: -1;
+}
+
+
+.glass-box {
+  background: rgba(255, 255, 255, 0.92);
+  padding: 3rem 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  animation: slideUp 0.8s ease;
+  max-width: 420px;
+  width: 100%;
+}
+.headline {
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: #003366;
+  margin-bottom: 1rem;
+}
+
+.subheading {
+  font-size: 1.1rem;
+  color: #4d4d4d;
+  margin-bottom: 2rem;
+}
+
+/* Buttons Group */
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+/* Button Base */
+.button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Login Button */
+.login-btn {
+  background-color: #003366;
+  color: white;
+  box-shadow: 0 4px 10px rgba(0, 51, 102, 0.2);
+}
+
+.login-btn:hover {
+  background-color: #002244;
+}
+
+.register-btn {
+  background-color: white;
+  color: #003366;
+  border: 2px solid #003366;
+}
+
+.register-btn:hover {
+  background-color: #e0eaff;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+

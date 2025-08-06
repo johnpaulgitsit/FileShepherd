@@ -1,0 +1,58 @@
+.file-view-container {
+  background-color: #111;
+  color: #e0e0e0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+}
+
+.file-view-heading {
+  font-size: 22px;
+  margin-bottom: 20px;
+  color: #00aaff;
+  border-bottom: 1px solid #333;
+  padding-bottom: 8px;
+}
+
+.file-view-message {
+  font-size: 18px;
+  color: #aaa;
+}
+
+.file-view-error {
+  font-size: 18px;
+  color: #ff4444;
+}
+
+.file-view-list {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 15px;
+}
+
+.file-view-item {
+  margin-bottom: 12px;
+  background-color: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  padding: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.file-view-item:hover {
+  background-color: #222;
+}
+
+.file-view-link {
+  color: #00d4ff;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.file-view-link:hover {
+  text-decoration: underline;
+}
+
+
+
