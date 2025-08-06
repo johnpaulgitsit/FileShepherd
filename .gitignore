@@ -52,3 +52,6 @@ frontend/dist/
 .DS_Store
 Thumbs.db
 .vscode/
+
+# Ignore frontend dependencies
+fileshep-frontend/node_modules/
