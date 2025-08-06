@@ -1,47 +1,40 @@
 # === Java / Maven / Spring Boot ===
-/backend/target/
+backend/target/
 *.class
 *.jar
 *.war
 *.ear
 
-target/
-
 # Maven backup files
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
+pom.xml.*
 release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 
 # Maven wrapper
-.mvn/wrapper/maven-wrapper.jar
-.mvn/wrapper/maven-wrapper.properties
+.mvn/wrapper/
 .mvn/timing.properties
 
 # IntelliJ IDEA
 .idea/
 *.iml
-*.iws
-*.ipr
-/backend/out/
+backend/out/
 
 # Eclipse
 .project
 .classpath
 
 # === Node / Frontend ===
-/frontend/node_modules/
-/frontend/build/
-/frontend/dist/
+frontend/node_modules/
+frontend/build/
+frontend/dist/
 
 # === Logs ===
 *.log
 
 # === Secrets & Credentials ===
 .env
+.env.local
 *.key
 *.pem
 *.crt
@@ -49,7 +42,7 @@ buildNumber.properties
 *.p12
 *.jks
 
-# Allow package.json files (important!)
+# === Exceptions for package files ===
 !package.json
 !frontend/package.json
 !frontend/package-lock.json
@@ -59,4 +52,3 @@ buildNumber.properties
 .DS_Store
 Thumbs.db
 .vscode/
-
