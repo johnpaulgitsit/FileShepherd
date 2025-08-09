@@ -37,7 +37,7 @@ function Login() {
 
   return (
     <div className="login-container">
-  <h2 className="login-title">Login to FileVault</h2>
+  <h2 className="login-title">Login to FileShepherd</h2>
   {error && <p className="error">{error}</p>}
   <form className="login-form" onSubmit={handleLogin}>
     <input
@@ -71,11 +71,6 @@ function Login() {
   <p>
     Don't have an account? <Link to="/register">Register here</Link>
   </p>
-
-  <ul>
-  <li>  DEFAULT username: demoUser </li>
-  <li> ADMIN username: admin1</li>
-  </ul>
   
 </div>
 

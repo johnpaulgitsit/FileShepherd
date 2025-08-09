@@ -89,16 +89,7 @@ function FileUpload() {
   <h2>Upload File</h2>
   <input type="file" onChange={handleFileChange} />
   <button className="upload-button" onClick={handleUpload}>Upload</button>
-  <p>{message}</p>
 
-  <h3>My Files</h3>
-  <ul>
-    {userFiles.map((file) => (
-      <li key={file.id} className="file-item">
-        {file.filename}
-      </li>
-    ))}
-  </ul>
 </div>
 
   );

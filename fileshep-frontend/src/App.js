@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-
 import LandingPage from "./pages/landing";
 import Login from "./pages/login";
 import Register from "./pages/register";
@@ -9,10 +8,12 @@ import Dashboard from "./pages/dashboard";
 import AdminDashboard from "./pages/admin-dashboard";
 import FileUpload from "./pages/fileupload";
 import FileView from "./pages/file-view";
+import Logo from "./components/logo";
 
 function App() {
   return (
     <Router>
+      <Logo />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
@@ -20,13 +21,14 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/fileupload" element={<FileUpload />} />
         <Route path="/file-view" element={<FileView />} />
-        <Route path="/admin-dashboard" element={<AdminDashboard/>} />
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
       </Routes>
     </Router>
   );
 }
 
 export default App;
+
 
 
 

@@ -5,7 +5,7 @@ import "../styles/dashboard.css";
 function Dashboard() {
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
-  const [username, setUsername] = useState(""); 
+  const [username, setUsername] = useState("");
   const [activeTab, setActiveTab] = useState("dashboard");
   const [stats, setStats] = useState({
     totalFiles: 0,
@@ -15,14 +15,18 @@ function Dashboard() {
   });
 
   useEffect(() => {
-    // ! Replace this with actual API calls Later!!!
-    fetch(`http://localhost:8080/api/auth/session?t=${Date.now()}`)
-      .then(res => res.json())
+    fetch("http://localhost:8080/api/auth/session", {
+      credentials: "include"
+    })
+      .then(res => {
+        if (!res.ok) throw new Error("Unauthorized");
+        return res.json();
+      })
       .then(data => {
         setUsername(data.username);
-        setIsAdmin(data.isAdmin || false); 
-        
-        // Set stats after successful API call
+        setIsAdmin(data.isAdmin || false);
+
+        // Simulated stats-> will replace with real API call later
         setStats({
           totalFiles: 1247,
           storageUsed: 75.3,
@@ -31,15 +35,16 @@ function Dashboard() {
         });
       })
       .catch(err => {
-        console.log(err);
+        console.error("Session check failed:", err);
+        navigate("/");
       });
-  }, []);
+  }, [navigate]);
 
   const handleLogout = async () => {
     try {
       const response = await fetch("http://localhost:8080/api/auth/logout", {
         method: "POST",
-        credentials: "include",
+        credentials: "include"
       });
       if (!response.ok) throw new Error("Logout failed");
       navigate("/");
@@ -57,30 +62,29 @@ function Dashboard() {
     <div className="dashboard-wrapper">
       <aside className="dashboard-sidebar">
         <div className="dashboard-header">
-          <div className="logo">FileVault Pro</div>
         </div>
-        
+
         <div className="nav-buttons">
-          <button 
+          <button
             className={activeTab === "dashboard" ? "active" : ""}
             onClick={() => handleNavigation("/dashboard", "dashboard")}
           >
             Dashboard
           </button>
-          <button 
+          <button
             className={activeTab === "upload" ? "active" : ""}
             onClick={() => handleNavigation("/fileupload", "upload")}
           >
             Upload Files
           </button>
-          <button 
+          <button
             className={activeTab === "files" ? "active" : ""}
             onClick={() => handleNavigation("/file-view", "files")}
           >
             My Files
           </button>
           {isAdmin && (
-            <button 
+            <button
               className={activeTab === "admin" ? "active" : ""}
               onClick={() => handleNavigation("/admin-dashboard", "admin")}
             >
@@ -88,7 +92,7 @@ function Dashboard() {
             </button>
           )}
         </div>
-        
+
         <div className="logout-section">
           <button onClick={handleLogout} className="logout-button">
             Logout
@@ -100,7 +104,7 @@ function Dashboard() {
         <div className="dashboard-header-content">
           <h1 className="dashboard-title">Dashboard Overview</h1>
           <p className="dashboard-subtitle">
-            Welcome back{username ? `, ${username}` : ''}! Here's what's happening with your files today.
+            Welcome back{username ? `, ${username}` : ""}! Here's what's happening with your files today.
           </p>
         </div>
 
@@ -161,7 +165,7 @@ function Dashboard() {
             📈 ---Chart visualization will go here---
             <br />
             <small style={{ marginTop: '0.5rem', display: 'block' }}>
-              Integrate with Chart.js or Recharts for actual data visualization
+              Possiblly Integrate with Chart.js or Recharts for actual data visualization
             </small>
           </div>
         </div>
@@ -171,17 +175,17 @@ function Dashboard() {
             <h3 className="chart-title">Quick Actions</h3>
           </div>
           <div className="action-buttons">
-            <button 
-              className="dashboard-button" 
+            <button
+              className="dashboard-button"
               onClick={() => navigate("/fileupload")}
             >
               Upload Files
             </button>
-            <button 
-              className="dashboard-button secondary" 
+            <button
+              className="dashboard-button secondary"
               onClick={() => navigate("/file-view")}
             >
-               View All Files
+              View All Files
             </button>
           </div>
         </div>
@@ -191,4 +195,5 @@ function Dashboard() {
 }
 
 export default Dashboard;
+
 

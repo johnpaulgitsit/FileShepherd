@@ -6,7 +6,10 @@ function AdminDashboard() {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [accessDenied, setAccessDenied] = useState(false); 
+  const [accessDenied, setAccessDenied] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [searching, setSearching] = useState(false);
 
   const fetchUsers = async () => {
     try {
@@ -14,13 +17,13 @@ function AdminDashboard() {
         method: "GET",
         credentials: "include",
       });
-      
+
       if (response.status === 403) {
         setAccessDenied(true);
         setLoading(false);
         return;
       }
-      
+
       if (!response.ok) throw new Error("Failed to fetch users");
       const data = await response.json();
       setUsers(data);
@@ -31,18 +34,40 @@ function AdminDashboard() {
     }
   };
 
+  const searchUsers = async (keyword) => {
+    setSearching(true);
+    try {
+      const response = await fetch(`http://localhost:8080/admin/users/search?keyword=${encodeURIComponent(keyword)}`, {
+        method: "GET",
+        credentials: "include",
+      });
+
+      if (!response.ok) throw new Error("Search failed");
+      const data = await response.json();
+      setSearchResults(data);
+    } catch (err) {
+      console.error("Error searching users:", err);
+    } finally {
+      setSearching(false);
+    }
+  };
+
   const handleAction = async (id, action) => {
     try {
       const response = await fetch(`http://localhost:8080/admin/users/${id}/${action}`, {
         method: "PUT",
         credentials: "include",
       });
+
       if (!response.ok) throw new Error("Action failed");
-      
-      await fetchUsers();
-      
+
+      if (searchTerm) {
+        await searchUsers(searchTerm);
+      } else {
+        await fetchUsers();
+      }
+
       console.log(`User ${id} status changed to ${action}`);
-      
     } catch (err) {
       console.error(`Error performing ${action} on user ${id}:`, err);
     }
@@ -62,10 +87,21 @@ function AdminDashboard() {
     }
   };
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      searchUsers(searchTerm);
+    } else {
+      setSearchResults([]);
+    }
+  };
+
   useEffect(() => {
     fetchUsers();
   }, []);
-  
+
+  const displayedUsers = searchTerm ? searchResults : users;
+
   if (accessDenied) {
     return (
       <div className="dashboard-wrapper">
@@ -81,7 +117,6 @@ function AdminDashboard() {
   return (
     <div className="dashboard-wrapper">
       <header className="dashboard-header">
-        <div className="logo">FileShepherd Admin</div>
         <button onClick={handleLogout} className="logout-button">
           Logout
         </button>
@@ -92,8 +127,35 @@ function AdminDashboard() {
         </aside>
         <main className="dashboard-content">
           <h2 className="dashboard-title">Admin User Management</h2>
-          {loading ? (
-            <p>Loading users...</p>
+
+          <div className="chart-section">
+            <div className="chart-card">
+              <h3>Total Users</h3>
+              <p>{users.length}</p>
+            </div>
+            <div className="chart-card">
+              <h3>Enabled Accounts</h3>
+              <p>{users.filter(u => u.enabled).length}</p>
+            </div>
+            <div className="chart-card">
+              <h3>Locked Accounts</h3>
+              <p>{users.filter(u => u.locked).length}</p>
+            </div>
+          </div>
+
+          <form onSubmit={handleSearch} className="search-form">
+            <input
+              type="text"
+              placeholder="Search by username or email"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
+            <button type="submit" className="search-button">Search</button>
+          </form>
+
+          {loading || searching ? (
+            <p>{searching ? "Searching..." : "Loading users..."}</p>
           ) : (
             <div className="table-section">
               <table className="user-table">
@@ -108,7 +170,7 @@ function AdminDashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {users.map((user) => (
+                  {displayedUsers.map((user) => (
                     <tr key={user.id}>
                       <td>{user.id}</td>
                       <td>{user.username}</td>
@@ -152,4 +214,6 @@ function AdminDashboard() {
 }
 
 export default AdminDashboard;
+
+
 
