@@ -1,7 +1,7 @@
-# Secure FileVault Lite
+# FileShepherd
 
 ## Overview
-SecureFVLite is a web app for securely sending files from a customer/user to your companies cloud account.
+FileShepherd is a secure web application designed to facilitate the transfer of files from customers or end users to a company’s cloud environment
 
 ## 🛠️ Tech Stack
 - Spring Boot
@@ -15,8 +15,7 @@ SecureFVLite is a web app for securely sending files from a customer/user to you
 - File upload/download with GCP
 
 ## 📸 Screenshots
-<img width="496" height="716" alt="Screenshot 2025-07-29 at 7 43 18 PM" src="https://github.com/user-attachments/assets/f91ad812-7c72-4540-9b53-b499f20c77a0" />
-
+<img width="1470" height="811" alt="shepimg" src="https://github.com/user-attachments/assets/4109edf7-cf99-4f96-b1c6-7b3db5a02033" />
 
 
 ##  How to Run
@@ -26,4 +25,6 @@ SecureFVLite is a web app for securely sending files from a customer/user to you
 4. Run `./gradlew bootRun` and `npm start`
 
 ## Learning
-While working on this project I was able to learn how to practice my springboot and java skills, use environment variables, password hashing and storage practices, and React functionality. I plan on expanding from this lite version to an even more functional version.
+While working on this project, I deepened my understanding of Spring Security and best practices in application security. I also strengthened my skills in Spring Boot and Java, incorporating environment variables for configuration management and implementing secure password hashing and storage techniques. On the front end, I enhanced my proficiency with React by integrating dynamic functionality and user interactions.
+
+This version serves as a foundational build, and I plan to expand it into a more robust and feature-rich application in future iterations.
